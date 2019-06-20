@@ -205,7 +205,7 @@ MESSAGE
   end
 
   def resource_params
-    params.fetch(resource_name, {})
+    params.require(:user).permit(*User.column_names,:password, :password_confirmation)
   end
 
   ActiveSupport.run_load_hooks(:devise_controller, self)
