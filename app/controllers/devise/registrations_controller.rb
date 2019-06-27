@@ -17,12 +17,13 @@ class Devise::RegistrationsController < DeviseController
     build_resource(sign_up_params)
 
     resource.save
+    resource_class.send_reset_password_instructions(resource_params)
     yield resource if block_given?
     if resource.persisted?
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
-        sign_up(resource_name, resource)
-        respond_with resource, location: after_sign_up_path_for(resource)
+        sign_up(resource_name, current_user)
+        respond_with current_user, location: after_sign_up_path_for(current_user)
       else
         set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
         expire_data_after_sign_in!
